@@ -49,6 +49,7 @@ x_inc = 1;
 y_inc = 1;
 
 -- Main testing loop
+-- Main testing loop
 for x = x_start, x_end, x_inc do
 	for y = y_start, y_end, y_inc do 
 		savestate.load("rayman_ringtest"); 
@@ -56,7 +57,9 @@ for x = x_start, x_end, x_inc do
 		advance_frames(2);
 		check_result();
 		emu.yield();
+		file = io.open("Rresults.txt", "a");
+		file:write(string.format("%d,%d,%d,%d\n",x,y,memory.read_s16_le(X_SPEED),memory.read_s16_le(Y_SPEED)));
+		file:close()
 	end
 end
-
 emu.limitframerate(true);
