@@ -22,11 +22,7 @@ function set_xy(x, y)
 	mainmemory.write_u16_le(CAMERA_Y, y - 96);
 end
  
-function check_result()
-	-- TODO: Do something useful here!
-	-- -scrimpeh
-end
- 
+
 function advance_frames(val)
 	for i=0,val,1 do
 		emu.frameadvance();
@@ -34,32 +30,37 @@ function advance_frames(val)
 end
  
 -- Sets up the save states
-savestate.save("rayman_ringtest");
-savestate.load("rayman_ringtest");
- 
-emu.limitframerate(false);
-   
+
 -- Variables
-x_start = 3260;  
-x_end = 3450;
-y_start = 415;
-y_end = 580;
+filename = "ringres1.txt"
+x_start = 3520;  
+x_end = 3650;
+y_start = 400;
+y_end = 475;
 
 x_inc = 1;
 y_inc = 1;
 
--- Main testing loop
--- Main testing loop
+--Preparation
+savestate.save("rayman_ringtest");
+savestate.load("rayman_ringtest");
+ 
+emu.limitframerate(false);
+
+--Main Loop
 for x = x_start, x_end, x_inc do
 	for y = y_start, y_end, y_inc do 
 		savestate.load("rayman_ringtest"); 
 		set_xy(x, y);
 		advance_frames(2);
-		check_result();
-		emu.yield();
-		file = io.open("Rresults.txt", "a");
+		
+		--Evaluate the result
+		file = io.open(filename, "a");
 		file:write(string.format("%d,%d,%d,%d\n",x,y,memory.read_s16_le(X_SPEED),memory.read_s16_le(Y_SPEED)));
 		file:close()
+		
+		emu.yield();	
 	end
 end
+
 emu.limitframerate(true);
