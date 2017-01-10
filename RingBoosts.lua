@@ -1,6 +1,5 @@
 -- Lua Script by Got4n/scrimpeh
 -- Checks Rayman speed during a boost
--- Launch it two frames before you get the boost (I think? pls scrimpeh confirm it)
 -- Addresses
 
 -- Constants
@@ -29,16 +28,14 @@ function advance_frames(val)
 	end
 end
  
--- Sets up the save states
-
 -- Variables
-filename = "ringres1.txt"
-x_start = 3520;  
-x_end = 3650;
-y_start = 400;
-y_end = 475;
+filename = "ringres.txt"
+x_start = 2300;  
+x_end = 2398;
+y_start = 10;
+y_end = 40;
 
-x_inc = 1;
+x_inc = 2;
 y_inc = 1;
 
 --Preparation
@@ -52,11 +49,12 @@ for x = x_start, x_end, x_inc do
 	for y = y_start, y_end, y_inc do 
 		savestate.load("rayman_ringtest"); 
 		set_xy(x, y);
-		advance_frames(2);
+		advance_frames(1);
+		xs = memory.read_s16_le(X_SPEED);
+		ys = memory.read_s16_le(Y_SPEED);
 		
-		--Evaluate the result
 		file = io.open(filename, "a");
-		file:write(string.format("%d,%d,%d,%d\n",x,y,memory.read_s16_le(X_SPEED),memory.read_s16_le(Y_SPEED)));
+		file:write(string.format("%d,%d,%d,%d\n", x, y, xs, ys));
 		file:close()
 		
 		emu.yield();	
